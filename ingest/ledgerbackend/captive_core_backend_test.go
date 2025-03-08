@@ -138,9 +138,7 @@ type testLedgerHeader struct {
 }
 
 func TestCaptiveNew(t *testing.T) {
-	storagePath, err := os.MkdirTemp("", "captive-core-*")
-	require.NoError(t, err)
-	defer os.RemoveAll(storagePath)
+	storagePath := t.TempDir()
 
 	var userAgent string
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -173,9 +171,7 @@ func TestCaptiveNew(t *testing.T) {
 }
 
 func TestCaptiveNewUnsupportedProtocolVersion(t *testing.T) {
-	storagePath, err := os.MkdirTemp("", "captive-core-*")
-	require.NoError(t, err)
-	defer os.RemoveAll(storagePath)
+	storagePath := t.TempDir()
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -186,7 +182,7 @@ func TestCaptiveNewUnsupportedProtocolVersion(t *testing.T) {
 	networkPassphrase := network.PublicNetworkPassphrase
 	historyURLs := []string{server.URL}
 
-	_, err = NewCaptive(
+	_, err := NewCaptive(
 		CaptiveCoreConfig{
 			BinaryPath:            executablePath,
 			NetworkPassphrase:     networkPassphrase,
@@ -1022,9 +1018,7 @@ func TestCaptiveGetLedger_NextLedger0RangeFromIsSmallerThanLedgerFromBuffer(t *t
 }
 
 func TestCaptiveStellarCore_PrepareRangeAfterClose(t *testing.T) {
-	storagePath, err := os.MkdirTemp("", "captive-core-*")
-	require.NoError(t, err)
-	defer os.RemoveAll(storagePath)
+	storagePath := t.TempDir()
 
 	ctx := context.Background()
 	executablePath := "/etc/stellar-core"
